@@ -22,6 +22,7 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -59,7 +60,6 @@ float pomiar=0;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void HAL_SYSTICK_Callback();
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -101,8 +101,12 @@ int main(void)
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_USART2_UART_Init();
+  MX_TIM4_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start(&htim3);
   HAL_ADC_Start_DMA(&hadc1,&wynik,1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -152,7 +156,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
-  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV8;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
